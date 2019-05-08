@@ -1,3 +1,4 @@
+import { AuthService } from './auth/auth.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'redux-admin-panel';
+
+  constructor( private auth: AuthService ) {
+    auth.initAuthListener()
+  }
+
 }
