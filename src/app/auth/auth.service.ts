@@ -2,26 +2,46 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Store } from '@ngrx/store';
+import { ActivateLoadingAction, ActivateReadygAction } from './../shared/ui.actions';
+import { AppState } from '../app.reducer';
+
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { User } from './model/user.model';
 
 import Swal from 'sweetalert2';
-import { User } from 'firebase';
+import * as firebase from 'firebase';
 import * as UserModel from './model/user.model';
+import { SetUserAction } from './auth.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  private userFirebaseSubscription: Subscription = new Subscription();
+
   constructor( private afAuth: AngularFireAuth,
                private router: Router,
-               private afDB: AngularFirestore ) { }
+               private afDB: AngularFirestore,
+               private store: Store<AppState> ) { }
 
   initAuthListener() {
 
     this.afAuth.authState.subscribe(
-      (fbUser: User) => {
-        console.log( fbUser );
+      (fbUser: firebase.User) => {
+        if ( fbUser ) {
+          this.userFirebaseSubscription = this.afDB.doc(`${ fbUser.uid }/usuario`).valueChanges()
+            .subscribe(
+              (userObj: any) => {
+                const newUser = new User( userObj );
+                this.store.dispatch( new SetUserAction( newUser ) );
+              }
+            );
+        } else {
+          this.userFirebaseSubscription.unsubscribe();
+        }
       }
     );
 
@@ -30,7 +50,7 @@ export class AuthService {
   isAuthenticated() {
     return this.afAuth.authState
       .pipe(
-        map( (fbUser: User) => {
+        map( (fbUser: firebase.User) => {
 
           if ( fbUser === null ) {
             this.router.navigate(['/login']);
@@ -42,6 +62,9 @@ export class AuthService {
   }
 
   newUser( name: string, email: string, password: string ) {
+
+    this.store.dispatch( new ActivateLoadingAction() );
+
     this.afAuth.auth
     .createUserWithEmailAndPassword( email, password )
     .then(
@@ -59,10 +82,12 @@ export class AuthService {
 
             console.log( DBresponse );
             this.router.navigate(['/dashboard']);
+            this.store.dispatch( new ActivateReadygAction() );
 
           })
           .catch(
             (error: any) => {
+              this.store.dispatch( new ActivateReadygAction() );
               Swal.fire( 'Error', error.message, 'error' );
             }
           );
@@ -77,15 +102,20 @@ export class AuthService {
   }
 
   login( email: string, password: string ) {
+
+    this.store.dispatch( new ActivateLoadingAction() );
+
     this.afAuth.auth
     .signInWithEmailAndPassword( email, password )
     .then(
       (response: any) => {
+        this.store.dispatch( new ActivateReadygAction() );
         this.router.navigate(['/dashboard']);
       }
     )
     .catch(
       (error: any) => {
+        this.store.dispatch( new ActivateReadygAction() );
         Swal.fire( 'Error', error.message, 'error' );
       }
     );
