@@ -8,7 +8,7 @@ const initState: UiState = {
   isLoading: false
 };
 
-export const uiReducer = ( state = initState, action: UIActions.actions ): UiState => {
+export function uiReducer( state = initState, action: UIActions.actions ): UiState {
 
   switch ( action.type ) {
 
