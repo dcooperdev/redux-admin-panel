@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import * as firebase from 'firebase';
 import * as UserModel from './model/user.model';
 import { SetUserAction, UnsetUserAction } from './auth.actions';
+import { UiToolsService } from '../shared/ui-tools.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class AuthService {
   constructor( private afAuth: AngularFireAuth,
                private router: Router,
                private afDB: AngularFirestore,
-               private store: Store<AppState> ) { }
+               private store: Store<AppState>,
+               private uiTools: UiToolsService ) { }
 
   initAuthListener() {
 
@@ -81,8 +83,6 @@ export class AuthService {
         this.afDB.doc(`${ user.uid }/usuario`)
           .set( user )
           .then( ( DBresponse: any ) => {
-
-            console.log( DBresponse );
             this.router.navigate(['/dashboard']);
             this.store.dispatch( new ActivateReadygAction() );
 

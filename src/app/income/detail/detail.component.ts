@@ -7,6 +7,7 @@ import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 import Swal from 'sweetalert2';
+import { UiToolsService } from 'src/app/shared/ui-tools.service';
 
 @Component({
   selector: 'app-detail',
@@ -19,7 +20,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription[] = [];
 
-  constructor( private store: Store<AppState>, private income: IncomeService ) { }
+  constructor( private store: Store<AppState>, private income: IncomeService, private uiTools: UiToolsService ) { }
 
   ngOnInit() {
     this.subscriptions.push(
@@ -51,11 +52,7 @@ export class DetailComponent implements OnInit, OnDestroy {
         this.income.deleteIncome( item.uid )
           .then( response => {
 
-            Swal.fire(
-              'Eliminado!',
-              `${ item.description } a sido eliminado!`,
-              'success'
-            );
+            this.uiTools.toast('success', `${ item.description } ha sido eliminado`, 2000 );
 
           });
       }

@@ -33,7 +33,6 @@ export class SignupComponent implements OnInit, OnDestroy {
   }
 
   onSubmit( data: any ) {
-    console.log( data );
     this.auth.newUser( data.name, data.email, data.password );
   }
 

@@ -1,5 +1,3 @@
-import { OperatorFunction } from 'rxjs';
-
 interface UserObject {
   description: string;
   ammount: number;
@@ -8,7 +6,7 @@ interface UserObject {
 }
 
 export class Income {
-
+  [x: string]: any;
   description: string;
   ammount: number;
   type: string;
@@ -18,7 +16,6 @@ export class Income {
     this.description = obj && obj.description || null;
     this.ammount     = obj && obj.ammount     || null;
     this.type        = obj && obj.type        || null;
-    // this.uid         = obj && obj.uid         || null;
   }
 
 }

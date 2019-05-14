@@ -1,7 +1,6 @@
 import * as IncomeActions from './income.actions';
 import { Income } from './model/income.model';
 import { AppState } from '../app.reducer';
-import { map } from 'rxjs/operators';
 
 export interface IncomeState {
     items: Income[];
@@ -34,6 +33,8 @@ export function incomeReducer( state = InitState, action: IncomeActions.actions 
       return {
         items: []
       };
+
+
 
     default:
       return state;

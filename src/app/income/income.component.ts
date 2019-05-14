@@ -54,15 +54,9 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
         this.store.dispatch( new ActivateReadygAction() );
 
-        Swal.fire({
-          title: 'Creado correctamente',
-          text: income.description,
-          type: 'success',
-          showConfirmButton: false,
-          timer: 1500
-        });
+        this.uiTools.toast('success', `${ income.description } creado correctamente`, 2000 );
 
-      })
+      });
 
   }
 

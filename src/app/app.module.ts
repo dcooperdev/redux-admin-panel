@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 // Modules
 import { AuthModule } from './auth/auth.module';
-import { IncomeModule } from './income/income.module';
 
 // routes
 import { AppRoutingModule } from './app-routing.module';
@@ -21,7 +20,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

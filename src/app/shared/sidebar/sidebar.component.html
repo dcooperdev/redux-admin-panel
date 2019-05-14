@@ -4,8 +4,8 @@
       <div class="nav-link">
 
         <div class="user-wrapper">
-          <div class="profile-image">
-            <img ngxGravatar [email]="user?.email" alt="Profile image">
+          <div class="profile-image" (click)="uiTools.gravatar()">
+            <img *ngIf="user?.email" ngxGravatar [email]="user?.email" alt="Profile image">
           </div>
 
           <div class="text-wrapper">
@@ -23,6 +23,13 @@
       <a [routerLink]="['/']" routerLinkActive="router-link-active"  class="nav-link">
         <i class="menu-icon fa fa-tachometer-alt"></i>
         <span class="menu-title">Dashboard</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a [routerLink]="['/products']" class="nav-link">
+        <i class="menu-icon fa fa-clipboard-list"></i>
+        <span class="menu-title">Inventario</span>
       </a>
     </li>
 

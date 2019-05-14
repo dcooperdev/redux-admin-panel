@@ -1,17 +1,17 @@
-import { AppState } from 'src/app/app.reducer';
-import { Store } from '@ngrx/store';
-import { Income } from './model/income.model';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from '../auth/auth.service';
-import { filter, map } from 'rxjs/operators';
-import { SetItemAction, UnsetItemAction } from './income.actions';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.reducer';
 import { Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { SetProductAction, UnsetProductAction } from './product.action';
+import { Product } from './model/product.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class IncomeService {
+export class ProductListService {
 
   private subscriptions: Subscription[] = [];
 
@@ -19,7 +19,7 @@ export class IncomeService {
                private auth: AuthService,
                private store: Store<AppState> ) { }
 
-  initIncomeListener() {
+  initProductListener() {
 
     this.subscriptions.push(
       this.store.select('auth')
@@ -27,14 +27,14 @@ export class IncomeService {
             filter( auth => auth.user !== null )
           )
           .subscribe( auth => {
-            this.IncomeItems( auth.user.uid );
+            this.IncomeProductItems( auth.user.uid );
           })
     );
   }
 
-  private IncomeItems( uid: string ) {
+  private IncomeProductItems( uid: string ) {
     this.subscriptions.push(
-      this.afDB.collection(`${ uid }/income/items`)
+      this.afDB.collection(`${ uid }/products/items`)
         .snapshotChanges()
           .pipe(
             map( docData => {
@@ -50,27 +50,27 @@ export class IncomeService {
           .subscribe(
             (collection: any) => {
 
-              this.store.dispatch( new SetItemAction( collection ) );
+              this.store.dispatch( new SetProductAction( collection ) );
 
             }
           )
     );
   }
 
-  newIncome( income: Income ) {
+  newProduct( product: Product ) {
 
     const user = this.auth.getUser();
 
-    return this.afDB.doc(`${ user.uid }/income`)
-               .collection('items').add({ ...income });
+    return this.afDB.doc(`${ user.uid }/products`)
+               .collection('items').add({ ...product });
 
   }
 
-  deleteIncome( uid: string ) {
+  deleteProduct( uid: string ) {
 
     const user = this.auth.getUser();
 
-    return this.afDB.doc(`${ user.uid }/income/items/${ uid }`)
+    return this.afDB.doc(`${ user.uid }/products/items/${ uid }`)
                .delete();
   }
 
@@ -78,6 +78,6 @@ export class IncomeService {
     this.subscriptions.forEach( (subscription: Subscription) => {
       subscription.unsubscribe();
     });
-    this.store.dispatch( new UnsetItemAction() );
+    this.store.dispatch( new UnsetProductAction() );
   }
 }

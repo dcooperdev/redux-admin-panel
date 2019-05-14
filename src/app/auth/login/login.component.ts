@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onSubmit( data: any ) {
-    console.log( data );
     this.auth.login( data.email, data.password );
   }
 

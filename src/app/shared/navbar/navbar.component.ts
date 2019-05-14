@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.reducer';
 import { User } from 'src/app/auth/model/user.model';
 import { filter } from 'rxjs/operators';
+import { UiToolsService } from '../ui-tools.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +14,7 @@ export class NavbarComponent implements OnInit {
 
   public user: User;
 
-  constructor( private store: Store<AppState> ) { }
+  constructor( private store: Store<AppState>, public uiTools: UiToolsService ) { }
 
   ngOnInit() {
     this.store.select('auth')
