@@ -5,13 +5,13 @@
 
         <div class="user-wrapper">
           <div class="profile-image">
-            <img src="assets/images/faces/face1.jpg" alt="profile image">
+            <img ngxGravatar [email]="user?.email" alt="Profile image">
           </div>
 
           <div class="text-wrapper">
-            <p class="profile-name">Juan Carlos</p>
+            <p class="profile-name">{{ user?.name }}</p>
             <div>
-              <small class="designation text-muted">Gerente</small>
+              <small class="designation text-muted">{{ user?.email }}</small>
             </div>
           </div>
         </div>

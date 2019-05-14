@@ -13,7 +13,7 @@ import { User } from './model/user.model';
 import Swal from 'sweetalert2';
 import * as firebase from 'firebase';
 import * as UserModel from './model/user.model';
-import { SetUserAction } from './auth.actions';
+import { SetUserAction, UnsetUserAction } from './auth.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,7 @@ import { SetUserAction } from './auth.actions';
 export class AuthService {
 
   private userFirebaseSubscription: Subscription = new Subscription();
+  private user: User;
 
   constructor( private afAuth: AngularFireAuth,
                private router: Router,
@@ -37,6 +38,7 @@ export class AuthService {
               (userObj: any) => {
                 const newUser = new User( userObj );
                 this.store.dispatch( new SetUserAction( newUser ) );
+                this.user = newUser;
               }
             );
         } else {
@@ -124,5 +126,11 @@ export class AuthService {
   logout() {
     this.router.navigate(['/login']);
     this.afAuth.auth.signOut();
+
+    this.store.dispatch( new UnsetUserAction() );
+  }
+
+  getUser() {
+    return { ...this.user };
   }
 }

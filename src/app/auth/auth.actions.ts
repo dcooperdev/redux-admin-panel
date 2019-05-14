@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 import { User } from './model/user.model';
 
 export const SET_USER = '[AUTH] Set user';
-export const DELEET_USER = '[AUTH] Delet user';
+export const UNSET_USER = '[AUTH] Delet user';
 
 export class SetUserAction implements Action {
   readonly type = SET_USER;
@@ -10,10 +10,8 @@ export class SetUserAction implements Action {
   constructor( public user: User ) { }
 }
 
-export class DeletUserAction implements Action {
-  readonly type = DELEET_USER;
-
-  constructor( public uid: string ) { }
+export class UnsetUserAction implements Action {
+  readonly type = UNSET_USER;
 }
 
-export type actions = SetUserAction | DeletUserAction;
+export type actions = SetUserAction | UnsetUserAction;

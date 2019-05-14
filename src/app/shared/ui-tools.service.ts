@@ -19,7 +19,9 @@ export class UiToolsService {
         }
       });
     } else {
-      Swal.close();
+      if ( Swal.isVisible() ) {
+        Swal.close();
+      }
     }
   }
 }
